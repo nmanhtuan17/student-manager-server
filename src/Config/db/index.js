@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 require('dotenv').config()
 
-const url = mongodb+srv://cnpm-stdm:ohISsPVqCAeCAWMh@student-management.rs2ajjf.mongodb.net/
+const url = "mongodb+srv://cnpm-stdm:ohISsPVqCAeCAWMh@student-management.rs2ajjf.mongodb.net/"
 
 const connect = () => {
     mongoose.connect(url)
