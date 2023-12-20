@@ -6,7 +6,7 @@ const verifyToken = (req, res, next) => {
     return res.status(403).json({ message: 'Token is missing' });
   }
 
-  jwt.verify(token, process.env.SECRET_KEY_JWT, (err, decoded) => {
+  jwt.verify(token, "std-manager", (err, decoded) => {
     if (err) {
       return res.status(401).json({ message: 'Invalid token' });
     }
