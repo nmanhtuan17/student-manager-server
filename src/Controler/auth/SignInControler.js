@@ -20,7 +20,7 @@ module.exports = {
           id: user._id,
           role: user.role
         },
-        process.env.JWT_ACCESS_KEY,
+         "std-manager-token",
         { expiresIn: '1d' }
         )
         res.status(200).json({message: 'Login success', data: {user: user}, token: accessToken})
