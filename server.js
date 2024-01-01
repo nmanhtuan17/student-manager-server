@@ -1,8 +1,8 @@
 const express = require("express")
 const cors = require("cors")
-const initRoute = require('./src/Routes/initRoute')
+const initRoute = require('./src/Routes')
 const connect = require('./src/Config/db/index')
-
+const cookieParser = require('cookie-parser')
 
 const app = express()
 app.use(cors())
@@ -11,7 +11,7 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   next();
 })
-
+app.use(cookieParser());
 
 const port = 8080
 app.use(express.json())

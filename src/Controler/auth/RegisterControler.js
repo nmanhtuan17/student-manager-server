@@ -6,20 +6,18 @@ module.exports = {
     const {fullname, msv , password, major,k } = req.body
     const hashPassword = await Encrypt.cryptPassword(password)
     try {
-      const validUser = await User.findOne({id: msv})
+      const validUser = await User.findOne({msv: msv})
       if(validUser) {
         res.status(400).json({message: 'User already exists'})
         return;
       }
       const newUser = new User({
-        id: msv,
+        msv: msv,
         fullname: fullname,
-        account: {  
-          msv: msv,
-          password: hashPassword
-        },
+        password: hashPassword,
         major: major,
-        k: k
+        k: k,
+        isAdmin: false
       })
       await newUser.save()
       res.status(200).json({message: 'Create account success'})

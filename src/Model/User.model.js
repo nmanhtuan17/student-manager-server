@@ -3,14 +3,12 @@ const Schema = mongoose.Schema
 
 
 const User = new Schema({
-  id: String,
   fullname: String,
-  account: {
-    msv: String,
-    password: String
-  },
+  msv: String,
+  password: String,
   major: String,
-  k: String
+  k: String,
+  isAdmin: Boolean
 })
 
 
