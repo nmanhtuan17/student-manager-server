@@ -13,7 +13,7 @@ app.use((req, res, next) => {
 })
 app.use(cookieParser());
 
-const port = 8080
+const port = process.env.PORT
 app.use(express.json())
 app.use(express.urlencoded({
   extended: true
