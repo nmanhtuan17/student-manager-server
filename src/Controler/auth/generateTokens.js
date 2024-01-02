@@ -8,7 +8,7 @@ module.exports = {
       isAdmin: user.isAdmin
     },
       process.env.JWT_ACCESS_KEY,
-      { expiresIn: '2h'}
+      { expiresIn: '2h' }
     )
   },
 
@@ -17,9 +17,8 @@ module.exports = {
       id: user._id,
       isAdmin: user.isAdmin
     },
-    process.env.JWT_REFRESH_KEY,
+      process.env.JWT_REFRESH_KEY,
       { expiresIn: '365d' }
     )
   }
 }
- 
