@@ -7,7 +7,7 @@ const Course = new Schema({
   mm: String,
   codeName: String,
   time: {
-    jd: String,
+    jd: Number,
     shift: String
   },
   room: String,

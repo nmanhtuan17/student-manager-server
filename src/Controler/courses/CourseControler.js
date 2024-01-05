@@ -4,7 +4,7 @@ module.exports = {
   getAllCourse: async (req, res) => {
     try {
       const courses = await Course.find({})
-      res.status(200).json({ data: courses })
+      res.status(200).json({message: "Success", data: courses })
     } catch (error) {
       res.status(500).json({ message: "Server error" })
     }
@@ -15,7 +15,7 @@ module.exports = {
     try {
       const course = await Course.findById(id)
       if (!course) return res.status(404).json({ message: "Course not found" })
-      return res.status(200).json({ data: course })
+      return res.status(200).json({message: "Success", data: course })
     }
     catch (e) {
       console.log(e)
