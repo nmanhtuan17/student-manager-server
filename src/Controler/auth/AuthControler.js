@@ -29,7 +29,6 @@ module.exports = {
       const user = await User.findOne({ msv: msv })
       if (!user) {
         return res.status(404).json({ message: 'user not exist' });
-
       }
       const comparePassword = await Encrypt.comparePassword(password, user.password)
       if (comparePassword) {
@@ -46,7 +45,7 @@ module.exports = {
         const { password, ...resUser } = user._doc;
         res.status(200).json({ message: 'Login success', data: { user: resUser }, tokens: { accessToken } })
       } else {
-        res.status(400).json({ message: 'Wrong password' })
+        res.status(400).json({ message: 'password is not correct' })
       }
     } catch (error) {
       res.status(500).json({ message: 'server error', error: error })
