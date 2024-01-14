@@ -2,15 +2,33 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
 
-const User = new Schema({
+const UserModel = new Schema({
   fullname: String,
   msv: String,
   password: String,
   major: String,
   k: String,
-  isAdmin: Boolean
+  isAdmin: Boolean,
+  courses: [
+    {
+      course: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course"
+      },
+      score: {
+        type: Number
+      }
+    }
+  ],
+  semesters: [
+    {
+      semester: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Semester"
+      }
+    }
+  ]
 })
 
-
-
-module.exports = mongoose.model("User", User)
+const User = mongoose.model("User", UserModel)
+export default User
