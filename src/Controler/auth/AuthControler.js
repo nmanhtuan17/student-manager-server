@@ -47,7 +47,7 @@ module.exports = {
         res.status(400).json({ message: 'password is not correct' })
       }
     } catch (error) {
-      res.status(500).json({ message: 'server error', error: error })
+      res.status(500).json({message: 'server error'})
     }
   }
 }
