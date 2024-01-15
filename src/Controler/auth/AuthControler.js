@@ -6,10 +6,10 @@ const Encrypt = require('../../Utils/encryption')
 module.exports = {
   requestRefreshToken: async (req, res) => {
     const refreshToken = req.cookies.refreshToken
-    if (!refreshToken) return res.status(401).json({ message: "You're not authenticated" })
+    if (!refreshToken) return res.status(403).json({ message: "You're not authenticated" })
     jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
       if (err) {
-        console.log(err);
+        res.status(403).json({ message: "You're not authenticated" })
       }
       const newAccessToken = renerateTokens.generateAccessToken(user)
       const newRefreshToken = renerateTokens.generateRefreshToken(user)
@@ -41,7 +41,6 @@ module.exports = {
           path: '/',
           sameSite: "strict"
         })
-
         const { password, ...resUser } = user._doc;
         res.status(200).json({ message: 'Login success', data: { user: resUser }, tokens: { accessToken } })
       } else {
