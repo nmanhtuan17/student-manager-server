@@ -5,7 +5,7 @@ const Encrypt = require('../../Utils/encryption')
 
 module.exports = {
   requestRefreshToken: async (req, res) => {
-    const refreshToken = req.cookies.refreshToken
+    const {refreshToken} = req.body
     if (!refreshToken) return res.status(403).json({ message: "You're not authenticated" })
     jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
       if (err) {
@@ -13,13 +13,7 @@ module.exports = {
       }
       const newAccessToken = renerateTokens.generateAccessToken(user)
       const newRefreshToken = renerateTokens.generateRefreshToken(user)
-      res.cookie("refreshToken", newRefreshToken, {
-        httpOnly: true,
-        secure: false,
-        path: '/',
-        sameSite: "strict"
-      })
-      res.status(200).json({ accessToken: newAccessToken })
+      res.status(200).json({ tokens: {accessToken: newAccessToken, refreshToken: newRefreshToken} })
     })
   },
 
@@ -35,14 +29,8 @@ module.exports = {
         const accessToken = generateTokens.generateAccessToken(user)
 
         const refreshToken = generateTokens.generateRefreshToken(user)
-        res.cookie("refreshToken", refreshToken, {
-          httpOnly: true,
-          secure: false,
-          path: '/',
-          sameSite: "strict"
-        })
         const { password, ...resUser } = user._doc;
-        res.status(200).json({ message: 'Login success', data: { user: resUser }, tokens: { accessToken } })
+        res.status(200).json({ message: 'Login success', data: { user: resUser }, tokens: { accessToken, refreshToken } })
       } else {
         res.status(400).json({ message: 'password is not correct' })
       }
