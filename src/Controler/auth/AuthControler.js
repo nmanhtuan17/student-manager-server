@@ -30,7 +30,7 @@ module.exports = {
 
         const refreshToken = generateTokens.generateRefreshToken(user)
         const { password, ...resUser } = user._doc;
-        res.status(200).json({ message: 'Login success', data: { user: resUser }, tokens: { accessToken, refreshToken } })
+        res.status(200).json({data: { user: resUser }, tokens: { accessToken, refreshToken } })
       } else {
         res.status(400).json({ message: 'password is not correct' })
       }
