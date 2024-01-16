@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 
 const Course = new Schema({
   name: String,
-  mm: String,
+  code: String,
   codeName: String,
   time: {
     jd: Number,

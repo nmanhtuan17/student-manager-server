@@ -24,15 +24,15 @@ module.exports = {
   },
 
   createCourse: async (req, res) => {
-    const { name, mm, codeName, jd, shift, room, tc, teacher } = req.body
+    const { name, code, codeName, jd, shift, room, tc, teacher } = req.body
     try {
-      const validCourse = await Course.findOne({ name, mm, codeName, jd, shift, room, tc, teacher })
+      const validCourse = await Course.findOne({ name, code, codeName, jd, shift, room, tc, teacher })
       if (validCourse) {
         res.status(400).json({ message: 'Course already exists' })
         return;
       }
       const newCourse = new Course({
-        name, mm, codeName,
+        name, code, codeName,
         time: {
           jd, shift
         }
