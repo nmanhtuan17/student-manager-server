@@ -4,17 +4,24 @@ const User = require('../../Model/User.model')
 const Encrypt = require('../../Utils/encryption')
 
 module.exports = {
-  requestRefreshToken: async (req, res) => {
-    const { refreshToken } = req.body
-    if (!refreshToken) return res.status(403).json({ message: "You're not authenticated" })
-    jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
-      if (err) {
-        res.status(403).json({ message: "You're not authenticated" })
-      }
-      const newAccessToken = renerateTokens.generateAccessToken(user)
-      const newRefreshToken = renerateTokens.generateRefreshToken(user)
-      res.status(200).json({ tokens: { accessToken: newAccessToken, refreshToken: newRefreshToken } })
-    })
+  requestRefreshToken: (req, res) => {
+    const {refreshToken} = req.body
+    console.log("refreshToken", refreshToken)
+    if (!refreshToken) return res.status(403).json({ message: "Token invalid" })
+    try {
+      jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
+        if (err) {
+          console.log(err)
+          return res.status(403).json({ message: "You're not authenticated" })
+        }
+        const newAccessToken = generateTokens.generateAccessToken(user)
+        const newRefreshToken = generateTokens.generateRefreshToken(user)
+        res.status(200).json({ tokens: { accessToken: newAccessToken, refreshToken: newRefreshToken } })
+      })
+    } catch (e) {
+      res.status(500).json("server error")
+    }
+
   },
 
   login: async (req, res) => {

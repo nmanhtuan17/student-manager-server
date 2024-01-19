@@ -23,7 +23,7 @@ const middlewareControler = {
       if(req.user.isAdmin) {
         next()
       } else {
-        res.status(403).json("You're not allowed")
+        res.status(401).json("You're not allowed")
       }
     })
   },
