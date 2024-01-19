@@ -9,6 +9,7 @@ const User = new Schema({
   major: String,
   k: String,
   isAdmin: Boolean,
+  isGV: Boolean,
   courses: [
     {
       course: {

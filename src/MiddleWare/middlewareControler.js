@@ -26,6 +26,16 @@ const middlewareControler = {
         res.status(403).json("You're not allowed")
       }
     })
+  },
+
+  verifyTokenIsGv: (req, res, next) => {
+    middlewareControler.verifyToken(req, res, () => {
+      if(req.user.isGV) {
+        next()
+      } {
+        res.status(401).json("You're not allowed")
+      }
+    })
   }
 }
 
