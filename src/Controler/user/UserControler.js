@@ -38,8 +38,8 @@ module.exports = {
   },
 
   createUser: async (req, res) => {
-    const { fullname, msv, password, major, year } = req.body
-    const hashPassword = await Encrypt.cryptPassword(password)
+    const { fullname, msv, major, year } = req.body
+    const hashPassword = await Encrypt.cryptPassword(msv)
     try {
       const validUser = await User.findOne({ msv: msv })
       if (validUser) {
@@ -52,7 +52,8 @@ module.exports = {
         password: hashPassword,
         major: major,
         year: year,
-        isAdmin: false
+        isAdmin: false,
+        isGV: false
       })
       await newUser.save()
       res.status(200).json({ message: 'Create user success', data: { user: newUser } })
