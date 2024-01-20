@@ -48,5 +48,22 @@ module.exports = {
     } catch (error) {
       res.status(500).json({ message: 'server error' })
     }
+  },
+
+  changePassword: async (req, res) => {
+    const {password} = req.body
+    const hashPassword = await Encrypt.cryptPassword(password)
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        res.status(404).json({message: "Unauthorized"})
+        return;
+      }
+      user.password = hashPassword;
+      await user.save();
+      return res.status(200).json({message: "Update success!!!"})
+    } catch (e) {
+      res.status(500).json({ message: 'server error' })
+    }
   }
 }
