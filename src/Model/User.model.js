@@ -3,11 +3,13 @@ const Schema = mongoose.Schema
 
 
 const User = new Schema({
+  mgv: String,
+  gvcn: String,
   fullname: String,
   msv: String,
   password: String,
   major: String,
-  k: String,
+  year: String,
   isAdmin: Boolean,
   isGV: Boolean,
   courses: [
