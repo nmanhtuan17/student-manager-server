@@ -12,6 +12,7 @@ const User = new Schema({
   year: String,
   isAdmin: Boolean,
   isGV: Boolean,
+  birthday: String,
   courses: [
     {
       course: {
