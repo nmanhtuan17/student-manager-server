@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const Course = new Schema({
   name: String,
   code: String,
-  codeName: String,
+  className: String,
   time: {
     jd: Number,
     shift: String
