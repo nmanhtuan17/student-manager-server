@@ -1,10 +1,11 @@
 const Course = require('../../Model/Course.model')
 const Encrypt = require('../../Utils/encryption')
+import Teacher from '../../Model/Teacher.model'
 module.exports = {
   getAllCourse: async (req, res) => {
     try {
       const courses = await Course.find({})
-      res.status(200).json({message: "Success", data: courses })
+      res.status(200).json({ message: "Success", data: courses })
     } catch (error) {
       res.status(500).json({ message: "Server error" })
     }
@@ -15,7 +16,7 @@ module.exports = {
     try {
       const course = await Course.findById(id)
       if (!course) return res.status(404).json({ message: "Course not found" })
-      return res.status(200).json({message: "Success", data: course })
+      return res.status(200).json({ message: "Success", data: course })
     }
     catch (e) {
       console.log(e)
@@ -40,9 +41,18 @@ module.exports = {
         room, tc, teacher
       })
       await newCourse.save()
+
+      const existTeacher = await Teacher.findOne({ mgv: teacher.toUpperCase() })
+      if (!existTeacher) {
+        return res.status(404).json({ message: 'Not found teacher' })
+      }
+      existTeacher.class.push({course: newCourse._id});
+      await existTeacher.save();
+      console.log(existTeacher);
       res.status(200).json({ message: 'Create course success', data: { course: newCourse } })
     } catch (err) {
-      res.status(522).json({message: "server err"})
+      console.log(err)
+      res.status(522).json({ message: "server err" })
     }
   },
 
