@@ -21,5 +21,24 @@ module.exports = {
     } catch (e) {
       res.status(500).json({message: "Error"})
     }
+  },
+
+  getAll: async (req, res) => {
+    try {
+      const data = await Teacher.find({})
+        .populate({
+          path: 'class.course'
+        })
+        .populate({
+          path: 'class.students.student'
+        })
+        .exec();
+        res.status(200).json({data: data})
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({message: "Error", error: error})
+    }
   }
+
+
 }

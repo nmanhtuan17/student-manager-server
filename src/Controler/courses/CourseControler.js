@@ -48,7 +48,6 @@ module.exports = {
       }
       existTeacher.class.push({course: newCourse._id});
       await existTeacher.save();
-      console.log(existTeacher);
       res.status(200).json({ message: 'Create course success', data: { course: newCourse } })
     } catch (err) {
       console.log(err)
