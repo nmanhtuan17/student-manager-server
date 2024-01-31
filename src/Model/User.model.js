@@ -15,6 +15,9 @@ const User = new Schema({
   phone: Number,
   email: String, 
   gender: String,
+  country: String,
+  address: String,
+  class: String,
   courses: [
     {
       course: {
