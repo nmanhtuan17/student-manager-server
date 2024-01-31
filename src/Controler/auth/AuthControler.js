@@ -35,8 +35,10 @@ module.exports = {
       else {
         user = await User.findOne({ msv: msv })
           .populate({
-            path: 'semesters.semester',
-            populate: { path: 'courses.course' }
+            path: 'semesters.semester'
+          })
+          .populate({
+            path: 'semesters.courses.course'
           })
       }
       if (!user) {
@@ -53,6 +55,7 @@ module.exports = {
         res.status(400).json({ message: 'password is not correct' })
       }
     } catch (error) {
+      console.log(error)
       res.status(500).json({ message: 'server error' })
     }
   },

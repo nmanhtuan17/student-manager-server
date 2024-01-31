@@ -3,7 +3,6 @@ const Schema = mongoose.Schema
 
 
 const User = new Schema({
-  mgv: String,
   gvcn: String,
   fullname: String,
   msv: String,
@@ -13,6 +12,9 @@ const User = new Schema({
   isAdmin: Boolean,
   isGV: Boolean,
   birthday: String,
+  phone: Number,
+  email: String, 
+  gender: String,
   courses: [
     {
       course: {
@@ -29,7 +31,15 @@ const User = new Schema({
       semester: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Semester"
-      }
+      },
+      courses: [
+        {
+          course: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Course"
+          }
+        }
+      ]
     }
   ]
 })

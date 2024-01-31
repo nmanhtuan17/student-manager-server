@@ -40,13 +40,14 @@ module.exports = {
         ,
         room, tc, teacher
       })
-      await newCourse.save()
+      
 
       const existTeacher = await Teacher.findOne({ mgv: teacher.toUpperCase() })
       if (!existTeacher) {
         return res.status(404).json({ message: 'Not found teacher' })
       }
       existTeacher.class.push({course: newCourse._id});
+      await newCourse.save()
       await existTeacher.save();
       res.status(200).json({ message: 'Create course success', data: { course: newCourse } })
     } catch (err) {
