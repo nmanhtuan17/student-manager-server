@@ -66,7 +66,7 @@ module.exports = {
         isAdmin: false,
         isGV: false,
         birthday: birthday,
-        phone: phone.toNumber(),
+        phone: phone,
         email: email,
         gender: gender,
         address: address,
