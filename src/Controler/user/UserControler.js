@@ -49,7 +49,7 @@ module.exports = {
       const validUser = await User.findOne({ msv: msv });
       const gv = await Teacher.findOne({mgv: gvcn.toUpperCase()});
       if (validUser) {
-        res.status(400).json({ message: 'User already exists' })
+        res.status(400).json({ message: 'Student already exists' })
         return;
       }
       if (!gv) {
@@ -66,16 +66,17 @@ module.exports = {
         isAdmin: false,
         isGV: false,
         birthday: birthday,
-        phone: phone,
+        phone: phone.toNumber(),
         email: email,
         gender: gender,
         address: address,
         class: className
       })
       await newUser.save()
-      res.status(200).json({ message: 'Create user success', data: { user: newUser } })
+      res.status(200).json({ message: 'Create student success', data: { user: newUser } })
     } catch (err) {
-      res.status(500).json('Server error')
+      console.log(err)
+      res.status(500).json({message: 'Server error', error: err})
     }
   },
 
@@ -84,12 +85,12 @@ module.exports = {
     try {
       const user = await User.findByIdAndDelete(id)
       if (!user) {
-        res.status(404).json({ message: 'User not exists' })
+        res.status(404).json({ message: 'Student not exists' })
         return;
       }
-      res.status(200).json({ message: 'Delete user success' })
+      res.status(200).json({ message: 'Delete student success' })
     } catch (err) {
-      res.status(500).json('Server error')
+      res.status(500).json({ message: 'sever error' })
     }
   }
 
