@@ -30,7 +30,13 @@ module.exports = {
     let user
     try {
       if (mgv) {
-        user = await Teacher.findOne({ mgv: mgv })
+        user = await Teacher.findOne({ mgv: mgv.toUpperCase() })
+        .populate({
+          path: 'class.course'
+        })
+        .populate({
+          path: 'class.students.student'
+        })
       }
       else {
         user = await User.findOne({ msv: msv })
@@ -50,7 +56,7 @@ module.exports = {
 
         const refreshToken = generateTokens.generateRefreshToken(user)
         const { password, ...resUser } = user._doc;
-        res.status(200).json({ data: { user: resUser }, tokens: { accessToken, refreshToken } })
+        res.status(200).json({ data: { user: resUser }, tokens: { accessToken, refreshToken }})
       } else {
         res.status(400).json({ message: 'password is not correct' })
       }
