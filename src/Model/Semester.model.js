@@ -3,10 +3,6 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const SemesterModel = new Schema({
-  userId: {
-    type: String,
-    require
-  },
   semester: {
     type: Number
   },
@@ -14,18 +10,7 @@ const SemesterModel = new Schema({
     type: Number
   },
   year: {
-    type: Number
-  },
-  courses: [
-    {
-      course: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course"
-      }
-    }
-  ],
-  tuition: {
-    type: Number
+    type: String
   }
 });
 

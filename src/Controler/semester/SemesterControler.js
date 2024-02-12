@@ -30,26 +30,13 @@ const SemesterControler = {
       res.status(500).json('server error')
     }
   },
-  create: async (req, res) => {
-    const {semester, group, year, courses, tuition, userId} = req.body;
-    const coursesData = courses.map(course => ({course}));
+  create: async (req, res, next) => {
+    const {semester, group, year} = req.body;
     try {
-      const user = await User.findById(userId)
-      if(!user) {
-        res.status(404).json({message: "User not found"})
-        return;
-      }
       const newSemes = new Semester({
-        semester, group, year, tuition,
-        courses: coursesData
+        semester, group, year
       })
       await newSemes.save()
-      const existSemester = user.semesters.find(semester => semester.semester === newSemes._id);
-      console.log(existSemester)
-      if(!existSemester) {
-        user.semesters.push({semester: newSemes._id});
-        await user.save()
-      }
       res.status(200).json({message: "Create success",data: newSemes})
     } catch (e) {
       console.log(e)

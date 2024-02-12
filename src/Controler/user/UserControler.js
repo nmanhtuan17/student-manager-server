@@ -1,12 +1,15 @@
 import User from '@/Model/User.model'
+import Teacher from '../../Model/Teacher.model'
 const Encrypt = require('../../Utils/encryption')
 module.exports = {
   getAllUser: async (req, res) => {
     try {
       const users = await User.find({})
         .populate({
-          path: 'semesters.semester',
-          populate: { path: 'courses.course' }
+          path: 'semesters.semester'
+        })
+        .populate({
+          path: 'semesters.courses.course'
         })
       if (users) {
         const data = users.map(user => {
@@ -24,10 +27,12 @@ module.exports = {
     const id = req.params.id
     try {
       const user = await User.findById(id)
-        .populate({
-          path: 'semesters.semester',
-          populate: { path: 'courses.course' }
-        })
+      .populate({
+        path: 'semesters.semester'
+      })
+      .populate({
+        path: 'semesters.courses.course'
+      })
       if (!user) return res.status(404).json({ message: "User not found" })
       const { password, ...rest } = user._doc
       return res.status(200).json({ data: rest })
@@ -38,13 +43,13 @@ module.exports = {
   },
 
   createUser: async (req, res) => {
-    const { fullname, msv, major, year, gvcn } = req.body
+    const { fullname, msv, major, year, gvcn, birthday, phone, email, gender, address, className } = req.body
     const hashPassword = await Encrypt.cryptPassword(msv)
     try {
       const validUser = await User.findOne({ msv: msv });
-      const gv = await User.findOne({mgv: gvcn});
+      const gv = await Teacher.findOne({mgv: gvcn.toUpperCase()});
       if (validUser) {
-        res.status(400).json({ message: 'User already exists' })
+        res.status(400).json({ message: 'Student already exists' })
         return;
       }
       if (!gv) {
@@ -59,35 +64,19 @@ module.exports = {
         major: major,
         year: year,
         isAdmin: false,
-        isGV: false
+        isGV: false,
+        birthday: birthday,
+        phone: phone,
+        email: email,
+        gender: gender,
+        address: address,
+        class: className
       })
       await newUser.save()
-      res.status(200).json({ message: 'Create user success', data: { user: newUser } })
+      res.status(200).json({ message: 'Create student success', data: { user: newUser } })
     } catch (err) {
-      res.status(500).json('Server error')
-    }
-  },
-
-  createGv: async (req, res) => {
-    const { fullname, mgv } = req.body
-    const hashPassword = await Encrypt.cryptPassword(mgv)
-    try {
-      const validUser = await User.findOne({ mgv: mgv });
-      if (validUser) {
-        res.status(400).json({ message: 'User already exists' })
-        return;
-      }
-      const newUser = new User({
-        mgv: mgv,
-        fullname: fullname,
-        password: hashPassword,
-        isAdmin: false,
-        isGV: true
-      })
-      await newUser.save()
-      res.status(200).json({ message: 'Create user success', data: { user: newUser } })
-    } catch (err) {
-      res.status(500).json('Server error')
+      console.log(err)
+      res.status(500).json({message: 'Server error', error: err})
     }
   },
 
@@ -96,12 +85,12 @@ module.exports = {
     try {
       const user = await User.findByIdAndDelete(id)
       if (!user) {
-        res.status(404).json({ message: 'User not exists' })
+        res.status(404).json({ message: 'Student not exists' })
         return;
       }
-      res.status(200).json({ message: 'Delete user success' })
+      res.status(200).json({ message: 'Delete student success' })
     } catch (err) {
-      res.status(500).json('Server error')
+      res.status(500).json({ message: 'sever error' })
     }
   }
 

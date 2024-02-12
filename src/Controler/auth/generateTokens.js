@@ -5,7 +5,8 @@ module.exports = {
   generateAccessToken: (user) => {
     return jwt.sign({
       id: user._id,
-      isAdmin: user.isAdmin
+      isAdmin: user.isAdmin,
+      isGV: user.isGV
     },
       process.env.JWT_ACCESS_KEY,
       { expiresIn: '2h' }
@@ -15,7 +16,8 @@ module.exports = {
   generateRefreshToken: (user) => {
     return jwt.sign({
       id: user._id,
-      isAdmin: user.isAdmin
+      isAdmin: user.isAdmin,
+      isGV: user.isGV
     },
       process.env.JWT_REFRESH_KEY,
       { expiresIn: '365d' }
