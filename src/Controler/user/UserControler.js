@@ -4,7 +4,7 @@ const Encrypt = require('../../Utils/encryption')
 module.exports = {
   getAllUser: async (req, res) => {
     try {
-      const users = await User.find({})
+      const users = await User.find({deleted: false})
         .populate({
           path: 'semesters.semester'
         })
@@ -34,6 +34,9 @@ module.exports = {
         path: 'semesters.courses.course'
       })
       if (!user) return res.status(404).json({ message: "User not found" })
+      if(user.deleted) {
+        return res.status(404).json({ message: "User not exist" })
+      }
       const { password, ...rest } = user._doc
       return res.status(200).json({ data: rest })
     }
@@ -57,6 +60,7 @@ module.exports = {
         return;
       }
       const newUser = new User({
+        deleted: false,
         msv: msv,
         gvcn: gv._id,
         fullname: fullname,
@@ -65,11 +69,6 @@ module.exports = {
         year: year,
         isAdmin: false,
         isGV: false,
-        birthday: birthday,
-        phone: phone,
-        email: email,
-        gender: gender,
-        address: address,
         class: className
       })
       await newUser.save()
@@ -82,12 +81,13 @@ module.exports = {
 
   deleteUser: async (req, res) => {
     const id = req.params.id
-    try {
-      const user = await User.findByIdAndDelete(id)
+    try { 
+      const user = await User.findById(id)
       if (!user) {
-        res.status(404).json({ message: 'Student not exists' })
-        return;
+        return res.status(404).json({ message: 'Student not exists' })
       }
+      user.deleted = true;
+      await user.save()
       res.status(200).json({ message: 'Delete student success' })
     } catch (err) {
       res.status(500).json({ message: 'sever error' })

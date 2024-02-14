@@ -3,6 +3,7 @@ const Schema = mongoose.Schema
 
 
 const User = new Schema({
+  deleted: Boolean,
   gvcn: String,
   fullname: String,
   msv: String,
