@@ -1,40 +1,52 @@
 const nodemailer = require('nodemailer')
-
-const sendEmail = async (email, subject, payload) => {
+require('dotenv').config()
+import { OAuth2Client } from 'google-auth-library'
+const sendEmail = async (email, subject, payload, req, res) => {
   try {
+    const myOAuth2Client = new OAuth2Client(
+      process.env.GOOGLE_MAILER_CLIENT_ID,
+      process.env.GOOGLE_MAILER_CLIENT_SECRET
+    )
+    // Set Refresh Token vào OAuth2Client Credentials
+    myOAuth2Client.setCredentials({
+      refresh_token: process.env.GOOGLE_MAILER_REFRESH_TOKEN
+    })
+    const { token } = await myOAuth2Client.getAccessToken();
     // create reusable transporter object using the default SMTP transport
-    const transporter = nodemailer.createTransport({
-      host: 'tuanmnguye@gmail.com',
-      port: 465,
+    const transport = nodemailer.createTransport({
+      service: 'gmail',
       auth: {
+        type: 'OAuth2',
         user: 'tuanmnguye@gmail.com',
-        pass: 'Tuan_1742003', // naturally, replace both with your real credentials or an application-specific password
-      },
-    });
+        clientId: process.env.GOOGLE_MAILER_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_MAILER_CLIENT_SECRET,
+        refresh_token: process.env.GOOGLE_MAILER_REFRESH_TOKEN,
+        accessToken: token
+      }
+    })
     const options = () => {
       return {
         from: 'tuanmnguye@gmail.com',
         to: email,
         subject: subject,
-        // html: compiledTemplate(payload),
+        text: payload
       };
     };
 
     // Send email
-    transporter.sendMail(options(), (error, info) => {
+    transport.sendMail(options(), (error, info) => {
       if (error) {
         console.log('====================================');
         console.log(error);
         console.log('====================================');
         return error;
       } else {
-        return res.status(200).json({
-          success: true,
-        });
+        return res.status(200).json({message: 'New password has been sent to your email'})
       }
     });
   } catch (error) {
-    return res.status(500).json(error);
+    console.log(error);
+    res.status(500).json({message: 'st wrong'})
   }
 };
 

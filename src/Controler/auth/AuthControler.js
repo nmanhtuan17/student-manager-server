@@ -3,7 +3,8 @@ const generateTokens = require('./generateTokens')
 const User = require('../../Model/User.model')
 const Encrypt = require('../../Utils/encryption')
 import Teacher from '../../Model/Teacher.model'
-
+import sendEmail from '../../Utils/sendEmail'
+import {generateRandomPassword} from '../../Utils/randomPassword'
 module.exports = {
   requestRefreshToken: (req, res) => {
     const { refreshToken } = req.body
@@ -72,7 +73,7 @@ module.exports = {
     try {
       const user = await User.findById(req.user.id);
       if (!user) {
-        res.status(404).json({ message: "Unauthorized" })
+        res.status(404).json({ message: "user not exist" })
         return;
       }
       user.password = hashPassword;
@@ -80,6 +81,25 @@ module.exports = {
       return res.status(200).json({ message: "Update success!!!" })
     } catch (e) {
       res.status(500).json({ message: 'server error' })
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    const {email, msv} = req.body
+    try {
+      const user = await User.findOne({msv: msv});
+      if (!user) {
+        res.status(404).json({ message: "user not exist" })
+        return;
+      }
+      const newPassword = generateRandomPassword(8);
+      const hashPassword = await Encrypt.cryptPassword(newPassword)
+      user.password = hashPassword;
+      user.save();
+      sendEmail(email, 'Reset Password', newPassword , req, res);
+    } catch (e) {
+      console.log(e)
+      return res.status(500).json(e)
     }
   }
 }

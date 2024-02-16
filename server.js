@@ -3,7 +3,8 @@ const cors = require("cors")
 const initRoute = require('./src/Routes')
 const connect = require('./src/Config/db/index')
 const cookieParser = require('cookie-parser')
-
+require('dotenv').config()
+import { OAuth2Client } from 'google-auth-library'
 const app = express()
 app.use(cors())
 // app.use((req, res, next) => {
@@ -18,6 +19,15 @@ app.use(express.json())
 app.use(express.urlencoded({
   extended: true
 }))
+
+export const myOAuth2Client = new OAuth2Client(
+  process.env.GOOGLE_MAILER_CLIENT_ID,
+  process.env.GOOGLE_MAILER_CLIENT_SECRET
+)
+// Set Refresh Token vào OAuth2Client Credentials
+myOAuth2Client.setCredentials({
+  refresh_token: process.env.GOOGLE_MAILER_REFRESH_TOKEN
+})
 
 
 
