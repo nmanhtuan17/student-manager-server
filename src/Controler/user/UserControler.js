@@ -115,8 +115,10 @@ module.exports = {
       user.email = data.email
       user.dob = data.dob
       user.phone = data.phone
+      user.gender = data.gender
       await user.save();
-      res.status(200).json({message: 'Update success', data: user})
+      const {password, ...rest} = user._doc
+      res.status(200).json({message: 'Update success', data: rest})
     } catch (error) {
       res.status(500).json({message: 'Update failed', error: error})
     }

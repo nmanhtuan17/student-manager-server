@@ -54,7 +54,7 @@ const User = new Schema({
     fatherJob: String,
     motherJob: String,
     parentPhone: String,
-    nationality: String,
+    nation: String,
     presentAddress: String,
     permanentAddress: String
   }
