@@ -105,7 +105,7 @@ module.exports = {
         fatherJob: data.fatherJob,
         motherJob: data.motherJob,
         parentPhone: data.parentPhone,
-        nationality: data.nationality,
+        nation: data.nation,
         presentAddress: data.presentAddress,
         permanentAddress: data.permanentAddress
       }
