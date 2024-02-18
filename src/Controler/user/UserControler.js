@@ -4,7 +4,7 @@ const Encrypt = require('../../Utils/encryption')
 module.exports = {
   getAllUser: async (req, res) => {
     try {
-      const users = await User.find({deleted: false})
+      const users = await User.find({ deleted: false })
         .populate({
           path: 'semesters.semester'
         })
@@ -27,14 +27,14 @@ module.exports = {
     const id = req.params.id
     try {
       const user = await User.findById(id)
-      .populate({
-        path: 'semesters.semester'
-      })
-      .populate({
-        path: 'semesters.courses.course'
-      })
+        .populate({
+          path: 'semesters.semester'
+        })
+        .populate({
+          path: 'semesters.courses.course'
+        })
       if (!user) return res.status(404).json({ message: "User not found" })
-      if(user.deleted) {
+      if (user.deleted) {
         return res.status(404).json({ message: "User not exist" })
       }
       const { password, ...rest } = user._doc
@@ -46,11 +46,11 @@ module.exports = {
   },
 
   createUser: async (req, res) => {
-    const { fullname, msv, major, year, gvcn, birthday, phone, email, gender, address, className } = req.body
+    const { fullname, msv, major, year, gvcn, gender, className } = req.body
     const hashPassword = await Encrypt.cryptPassword(msv)
     try {
       const validUser = await User.findOne({ msv: msv });
-      const gv = await Teacher.findOne({mgv: gvcn.toUpperCase()});
+      const gv = await Teacher.findOne({ mgv: gvcn.toUpperCase() });
       if (validUser) {
         res.status(400).json({ message: 'Student already exists' })
         return;
@@ -69,19 +69,20 @@ module.exports = {
         year: year,
         isAdmin: false,
         isGV: false,
-        class: className
+        class: className,
+        gender: gender
       })
       await newUser.save()
       res.status(200).json({ message: 'Create student success', data: { user: newUser } })
     } catch (err) {
       console.log(err)
-      res.status(500).json({message: 'Server error', error: err})
+      res.status(500).json({ message: 'Server error', error: err })
     }
   },
 
   deleteUser: async (req, res) => {
     const id = req.params.id
-    try { 
+    try {
       const user = await User.findById(id)
       if (!user) {
         return res.status(404).json({ message: 'Student not exists' })
@@ -92,6 +93,32 @@ module.exports = {
     } catch (err) {
       res.status(500).json({ message: 'sever error' })
     }
-  }
+  },
 
+  updateProfile: async (req, res) => {
+    const data = req.body
+    try {
+      const user = await User.findById(req.user.id)
+      user.parent = {
+        fatherName: data.fatherName,
+        motherName: data.motherName,
+        fatherJob: data.fatherJob,
+        motherJob: data.motherJob,
+        parentPhone: data.parentPhone,
+        nationality: data.nationality,
+        presentAddress: data.presentAddress,
+        permanentAddress: data.permanentAddress
+      }
+      user.firstName = data.firstName
+      user.lastName = data.lastName
+      user.address = data.address
+      user.email = data.email
+      user.dob = data.dob
+      user.phone = data.phone
+      await user.save();
+      res.status(200).json({message: 'Update success', data: user})
+    } catch (error) {
+      res.status(500).json({message: 'Update failed', error: error})
+    }
+  }
 }

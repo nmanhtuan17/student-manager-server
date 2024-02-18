@@ -6,13 +6,15 @@ const User = new Schema({
   deleted: Boolean,
   gvcn: String,
   fullname: String,
+  firstName: String, 
+  lastName: String,
   msv: String,
   password: String,
   major: String,
   year: String,
   isAdmin: Boolean,
   isGV: Boolean,
-  birthday: String,
+  dob: String,
   phone: Number,
   email: String, 
   gender: String,
@@ -45,6 +47,16 @@ const User = new Schema({
         }
       ]
     }
-  ]
+  ],
+  parent: {
+    fatherName: String,
+    motherName: String,
+    fatherJob: String,
+    motherJob: String,
+    parentPhone: String,
+    nationality: String,
+    presentAddress: String,
+    permanentAddress: String
+  }
 })
 module.exports = mongoose.model("User", User)
