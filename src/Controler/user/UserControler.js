@@ -116,6 +116,8 @@ module.exports = {
       user.dob = data.dob
       user.phone = data.phone
       user.gender = data.gender
+      user.class = data.class
+      user.major = data.major
       await user.save();
       const {password, ...rest} = user._doc
       res.status(200).json({message: 'Update success', data: rest})
