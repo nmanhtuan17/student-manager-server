@@ -98,7 +98,7 @@ module.exports = {
   updateProfile: async (req, res) => {
     const data = req.body
     try {
-      const user = await User.findById(req.user.id)
+      const user = await User.findById(req.params.id)
       user.parent = {
         fatherName: data.fatherName,
         motherName: data.motherName,
@@ -123,6 +123,18 @@ module.exports = {
       res.status(200).json({message: 'Update success', data: rest})
     } catch (error) {
       res.status(500).json({message: 'Update failed', error: error})
+    }
+  },
+  updateGv: async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id)
+      req.body.map((gv) => {
+        user.gv.push(gv);
+      })
+      await user.save()
+      res.status(200).json({message: 'Update success', data: user});
+    } catch (error) {
+      res.status(500).json({message: 'error', error: error})
     }
   }
 }

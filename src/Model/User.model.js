@@ -4,7 +4,10 @@ const Schema = mongoose.Schema
 
 const User = new Schema({
   deleted: Boolean,
-  gvcn: String,
+  gvcn: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Teacher'
+  },
   fullname: String,
   firstName: String, 
   lastName: String,

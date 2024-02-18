@@ -6,5 +6,5 @@ router.get('/getAll',middlewareControler.verifyTokenIsAdmin, UserControler.getAl
 router.get('/:id', middlewareControler.verifyToken, UserControler.getUser)
 router.post('/create-user', middlewareControler.verifyTokenIsAdmin, UserControler.createUser)
 router.post('/delete/:id', middlewareControler.verifyTokenIsAdmin, UserControler.deleteUser)
-router.post('/update-profile', middlewareControler.verifyToken, UserControler.updateProfile)
+router.post('/update-profile/:id', middlewareControler.verifyToken, UserControler.updateProfile)
 module.exports = router
