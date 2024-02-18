@@ -15,7 +15,7 @@ const User = new Schema({
   isAdmin: Boolean,
   isGV: Boolean,
   dob: String,
-  phone: Number,
+  phone: String,
   email: String, 
   gender: String,
   country: String,
