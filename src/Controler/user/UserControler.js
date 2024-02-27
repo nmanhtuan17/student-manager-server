@@ -131,7 +131,7 @@ module.exports = {
       req.body.map((gv) => {
         user.gv.push(gv);
       })
-      await user.save()
+      await user.save();
       res.status(200).json({message: 'Update success', data: user});
     } catch (error) {
       res.status(500).json({message: 'error', error: error})

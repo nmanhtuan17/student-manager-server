@@ -96,7 +96,7 @@ module.exports = {
       const hashPassword = await Encrypt.cryptPassword(newPassword)
       user.password = hashPassword;
       user.save();
-      sendEmail(user.email, 'Reset Password', newPassword , req, res);
+      sendEmail(email, 'Reset Password', newPassword , req, res);
     } catch (e) {
       console.log(e)
       return res.status(500).json(e)
