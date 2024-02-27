@@ -89,7 +89,7 @@ module.exports = {
   },
 
   resetPassword: async (req, res) => {
-    const {email, msv} = req.body
+    const {msv} = req.body
     try {
       const user = await User.findOne({msv: msv});
       if (!user) {
