@@ -73,16 +73,16 @@ module.exports = {
     try {
       const user = await User.findById(req.user.id);
       if (!user) {
-        res.status(404).json({ message: "user not exist" })
+        res.status(404).json({ message: "tài khoản k tồn tại" })
         return;
       }
       const comparePassword = await Encrypt.comparePassword(password, user.password)
       if(!comparePassword) {
-        return res.status(400).json({ message: 'password is not correct' });
+        return res.status(400).json({ message: 'mật khẩu không chính xác!!' });
       }
       user.password = hashPassword;
       await user.save();
-      return res.status(200).json({ message: "Update success!" })
+      return res.status(200).json({ message: "Đổi thành công" })
     } catch (e) {
       res.status(500).json({ message: 'server error', error: e })
     }
