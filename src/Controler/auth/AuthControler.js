@@ -68,24 +68,28 @@ module.exports = {
   },
 
   changePassword: async (req, res) => {
-    const { password } = req.body
-    const hashPassword = await Encrypt.cryptPassword(password)
+    const { password, newPass } = req.body
+    const hashPassword = await Encrypt.cryptPassword(newPass)
     try {
       const user = await User.findById(req.user.id);
       if (!user) {
-        res.status(404).json({ message: "user not exist" })
+        res.status(404).json({ message: "tài khoản k tồn tại" })
         return;
+      }
+      const comparePassword = await Encrypt.comparePassword(password, user.password)
+      if(!comparePassword) {
+        return res.status(400).json({ message: 'mật khẩu không chính xác!!' });
       }
       user.password = hashPassword;
       await user.save();
-      return res.status(200).json({ message: "Update success!!!" })
+      return res.status(200).json({ message: "Đổi thành công" })
     } catch (e) {
-      res.status(500).json({ message: 'server error' })
+      res.status(500).json({ message: 'server error', error: e })
     }
   },
 
   resetPassword: async (req, res) => {
-    const {email, msv} = req.body
+    const {msv} = req.body
     try {
       const user = await User.findOne({msv: msv});
       if (!user) {
@@ -96,7 +100,7 @@ module.exports = {
       const hashPassword = await Encrypt.cryptPassword(newPassword)
       user.password = hashPassword;
       user.save();
-      sendEmail(email, 'Reset Password', newPassword , req, res);
+      sendEmail(user?.email, 'Reset Password', newPassword , req, res);
     } catch (e) {
       console.log(e)
       return res.status(500).json(e)
