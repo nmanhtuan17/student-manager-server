@@ -5,7 +5,8 @@ module.exports = {
   getAllCourse: async (req, res) => {
     try {
       const courses = await Course.find({})
-      res.status(200).json({ message: "Success", data: courses })
+      const _courses = courses.filter(item => !item?.deleted);
+      res.status(200).json({ message: "Success", data: _courses })
     } catch (error) {
       res.status(500).json({ message: "Server error" })
     }
@@ -16,6 +17,9 @@ module.exports = {
     try {
       const course = await Course.findById(id)
       if (!course) return res.status(404).json({ message: "Course not found" })
+      if(course?.deleted) {
+        return res.status(400).json({message: 'course not found'})
+      }
       return res.status(200).json({ message: "Success", data: course })
     }
     catch (e) {
@@ -33,6 +37,7 @@ module.exports = {
         return;
       }
       const newCourse = new Course({
+        deleted: false,
         name, code, className,
         time: {
           jd, shift
