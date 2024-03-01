@@ -49,9 +49,9 @@ module.exports = {
     const { fullname, msv, major, year, gvcn, gender, className } = req.body
     const hashPassword = await Encrypt.cryptPassword(msv)
     try {
-      const validUser = await User.findOne({ msv: msv });
+      const validUser = await User.findOne({ msv: msv.toUpperCase() });
       const gv = await Teacher.findOne({ mgv: gvcn.toUpperCase() });
-      if (validUser) {
+      if (validUser && !validUser?.deleted) {
         res.status(400).json({ message: 'Student already exists' })
         return;
       }
@@ -61,7 +61,7 @@ module.exports = {
       }
       const newUser = new User({
         deleted: false,
-        msv: msv,
+        msv: msv.toUpperCase(),
         gvcn: gv._id,
         fullname: fullname,
         password: hashPassword,
