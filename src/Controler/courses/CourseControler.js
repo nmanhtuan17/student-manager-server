@@ -59,12 +59,14 @@ module.exports = {
   deleteCourse: async (req, res) => {
     const id = req.params.id
     try {
-      const course = await Course.findByIdAndDelete(id)
+      const course = await Course.findById(id)
       if (!course) {
-        res.status(404).json({ message: 'course not exists' })
+        res.status(404).json({ message: 'Xóa thất bại' })
         return;
       }
-      res.status(200).json({ message: 'Delete course success' })
+      course.deleted = true;
+      await course.save();
+      res.status(200).json({ message: 'Xóa thành công' })
     } catch (err) {
       res.status(500).json('Server error')
     }

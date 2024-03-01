@@ -3,6 +3,7 @@ const Schema = mongoose.Schema
 
 
 const Course = new Schema({
+  deleted: Boolean,
   name: String,
   code: String,
   className: String,
