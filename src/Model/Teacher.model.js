@@ -8,6 +8,9 @@ const TeacherModel = new Schema({
   password: String,
   isGV: Boolean,
   isAdmin: Boolean,
+  email: String,
+  phone: String,
+  major: String,
   class: [
     {
       course: {

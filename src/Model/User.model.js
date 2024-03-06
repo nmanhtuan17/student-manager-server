@@ -4,12 +4,16 @@ const Schema = mongoose.Schema
 
 const User = new Schema({
   deleted: Boolean,
-  gvcn: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Teacher'
-  },
+  gvcns: [
+    {
+      gvcn: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Teacher'
+      }
+    }
+  ],
   fullname: String,
-  firstName: String, 
+  firstName: String,
   lastName: String,
   msv: String,
   password: String,
@@ -19,7 +23,7 @@ const User = new Schema({
   isGV: Boolean,
   dob: String,
   phone: String,
-  email: String, 
+  email: String,
   gender: String,
   country: String,
   address: String,

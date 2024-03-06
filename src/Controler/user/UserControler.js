@@ -11,6 +11,9 @@ module.exports = {
         .populate({
           path: 'semesters.courses.course'
         })
+        .populate({
+          path: 'gvcns.gvcn'
+        })
       if (users) {
         const data = users.map(user => {
           const { password, ...rest } = user._doc
@@ -32,6 +35,9 @@ module.exports = {
         })
         .populate({
           path: 'semesters.courses.course'
+        })
+        .populate({
+          path: 'gvcns.gvcn'
         })
       if (!user) return res.status(404).json({ message: "User not found" })
       if (user.deleted) {
@@ -59,10 +65,11 @@ module.exports = {
         res.status(404).json({ message: "Don't found teacher" })
         return;
       }
+      console.log(gv)
       const newUser = new User({
         deleted: false,
         msv: msv.toUpperCase(),
-        gvcn: gv._id,
+        gvcns: [{gvcn: gv._id}],
         fullname: fullname,
         password: hashPassword,
         major: major,
@@ -130,7 +137,7 @@ module.exports = {
     try {
       const user = await User.findById(req.params.id)
       req.body.map((gv) => {
-        user.gv.push(gv);
+        user.gvcns.push({gvcn: gv});
       })
       await user.save();
       res.status(200).json({message: 'Update success', data: user});
