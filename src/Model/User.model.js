@@ -6,10 +6,8 @@ const User = new Schema({
   deleted: Boolean,
   gvcns: [
     {
-      gvcn: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Teacher'
-      }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Teacher'
     }
   ],
   fullname: String,

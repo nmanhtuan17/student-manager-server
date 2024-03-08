@@ -12,7 +12,7 @@ module.exports = {
           path: 'semesters.courses.course'
         })
         .populate({
-          path: 'gvcns.gvcn'
+          path: 'gvcns'
         })
       if (users) {
         const data = users.map(user => {
@@ -37,7 +37,7 @@ module.exports = {
           path: 'semesters.courses.course'
         })
         .populate({
-          path: 'gvcns.gvcn'
+          path: 'gvcns'
         })
       if (!user) return res.status(404).json({ message: "User not found" })
       if (user.deleted) {
@@ -65,11 +65,9 @@ module.exports = {
         res.status(404).json({ message: "Don't found teacher" })
         return;
       }
-      console.log(gv)
       const newUser = new User({
         deleted: false,
         msv: msv.toUpperCase(),
-        gvcns: [{gvcn: gv._id}],
         fullname: fullname,
         password: hashPassword,
         major: major,
@@ -80,6 +78,7 @@ module.exports = {
         gender: gender,
         email: email
       })
+      newUser.gvcns.push(gv._id);
       await newUser.save()
       res.status(200).json({ message: 'Create student success', data: { user: newUser } })
     } catch (err) {
@@ -127,22 +126,29 @@ module.exports = {
       user.class = data.class
       user.major = data.major
       await user.save();
-      const {password, ...rest} = user._doc
-      res.status(200).json({message: 'Update success', data: rest})
+      const { password, ...rest } = user._doc
+      res.status(200).json({ message: 'Update success', data: rest })
     } catch (error) {
-      res.status(500).json({message: 'Update failed', error: error})
+      res.status(500).json({ message: 'Update failed', error: error })
     }
   },
   updateGv: async (req, res) => {
+    const gvs = req.body.gvcn;
     try {
       const user = await User.findById(req.params.id)
-      req.body.map((gv) => {
-        user.gvcns.push({gvcn: gv});
+        .populate({
+          path: 'gvcns'
+        })
+      gvs.map((gv) => {
+        const existUser = user.gvcns.filter((item) => item._id == gv );
+        if(!existUser.length) {
+          user.gvcns.push(gv);
+        }
       })
       await user.save();
-      res.status(200).json({message: 'Update success', data: user});
+      res.status(200).json({ message: 'Update success', data: user });
     } catch (error) {
-      res.status(500).json({message: 'error', error: error})
+      res.status(500).json('server error');
     }
   }
 }
