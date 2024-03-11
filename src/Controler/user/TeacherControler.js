@@ -2,9 +2,9 @@ import Teacher from "../../Model/Teacher.model";
 const Encrypt = require('../../Utils/encryption');
 module.exports = {
   createTeacher: async (req, res) => {
-    const { mgv, fullname, email, phone, major } = req.body
+    const { mgv, fullname, email, phone, major, course } = req.body
     try {
-      const existUser = await Teacher.findOne({mgv: mgv})
+      const existUser = await Teacher.findOne({mgv: mgv.toUpperCase()})
       if (existUser) {
         return res.status(400).json({message: "Teacher already exist"});
       }
@@ -15,7 +15,8 @@ module.exports = {
         isGV: true,
         email: email,
         phone: phone,
-        mojor: major
+        major: major,
+        course: course
       })
       await newTeacher.save()
       res.status(200).json(newTeacher)

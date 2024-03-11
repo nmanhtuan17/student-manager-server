@@ -11,6 +11,7 @@ const TeacherModel = new Schema({
   email: String,
   phone: String,
   major: String,
+  course: String,
   class: [
     {
       course: {
