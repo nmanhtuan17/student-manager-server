@@ -52,7 +52,7 @@ module.exports = {
   },
 
   createUser: async (req, res) => {
-    const { fullname, msv, major, year, gvcn, gender, className, email } = req.body
+    const { fullname, msv, major, year, gvcn, gender, className, email, birthday} = req.body
     const hashPassword = await Encrypt.cryptPassword(msv)
     try {
       const validUser = await User.findOne({ msv: msv.toUpperCase() });
@@ -76,7 +76,8 @@ module.exports = {
         isGV: false,
         class: className,
         gender: gender,
-        email: email
+        email: email,
+        dob: birthday
       })
       newUser.gvcns.push(gv._id);
       await newUser.save()
@@ -91,6 +92,9 @@ module.exports = {
     const id = req.params.id
     try {
       const user = await User.findById(id)
+        .populate({
+          path: 'gvcns'
+        })
       if (!user) {
         return res.status(404).json({ message: 'Student not exists' })
       }
@@ -98,6 +102,7 @@ module.exports = {
       await user.save()
       res.status(200).json({ message: 'Delete student success' })
     } catch (err) {
+      console.log(err)
       res.status(500).json({ message: 'sever error' })
     }
   },
